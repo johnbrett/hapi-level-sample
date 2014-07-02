@@ -6,7 +6,9 @@
   "dependencies": {
     "hapi": "~6.0.2",
     "hapi-swagger": "~0.2.0",
-    "joi": "~4.6.1"
+    "joi": "~4.6.1",
+    "level": "~0.18.0",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {},
   "scripts": {
