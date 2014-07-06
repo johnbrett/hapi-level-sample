@@ -3,25 +3,31 @@ var _ = require('lodash')
 var users = require('./users')
 
 exports.register = function(plugin, options, next) {
+
+    var hapi = plugin.hapi
+    var db = plugin.plugins['hapi-level'].db
+
     plugin.route([
         {
             path: "/users",
             method: "GET",
             handler: function(request, reply) {
-                if(request.query.name){
-                    users = _.filter(users, function(user) {
-                        return user.name.indexOf(request.query.name) > -1;
+                var users = []
+                db.createReadStream()
+                    .on('data', function(data) {
+                        if (typeof request.query.name === "undefined" || data.value.indexOf(request.query.name) >= 0) {
+                            users.push({
+                                id: data.key,
+                                name: data.value
+                            })
+                        }
                     })
-                    reply({
-                        statusCode: 200,
-                        data: users
+                    .on('end', function(data) {
+                        reply({
+                            statusCode: 200,
+                            data: users
+                        })
                     })
-                } else {
-                    reply({
-                        statusCode: 200,
-                        data: users
-                    });
-                }
             },
             config: {
                 validate: {
@@ -38,9 +44,18 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "GET",
             handler: function(request, reply) {
-                reply({
-                    statusCode: 200,
-                    data: users[request.params.id]
+                db.get(request.params.id, function(err, value) {
+                    if(err){
+                        reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                    } else {
+                        reply({
+                            statusCode: 200,
+                            data: {
+                                id: request.params.id,
+                                name: value
+                            }
+                        })
+                    }
                 })
             },
             config: {
@@ -57,22 +72,21 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "POST",
             handler: function(request, reply) {
-                if(!users[request.query.id]) {
-                    users[request.query.id] = {
-                        id: request.query.id,
-                        name: request.query.name
+                db.put(request.query.id, request.query.name, function(err) {
+                    if(err){
+                        reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                    } else {
+                        db.get(request.query.id, function(err, value) {
+                            reply({
+                                statusCode: 200,
+                                data: {
+                                    id: request.query.id,
+                                    name: value
+                                }
+                            })
+                        })
                     }
-                    reply({
-                        statusCode: 200,
-                        data: users[request.query.id]
-                    })
-                } else {
-                    reply({
-                        statusCode: 400,
-                        error: "ID already in use",
-                        message: "Try again with a different ID"
-                    })
-                }
+                })
             },
             config: {
                 validate: {
@@ -89,18 +103,22 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "DELETE",
             handler: function(request, reply) {
-                if(users[request.params.id]) {
-                    delete users[request.params.id]
-                    reply({
-                        statusCode: 200,
-                        message: "User deleted succesfully"
-                    })
-                } else {
-                    reply({
-                        statusCode: 400,
-                        message: "The user with that ID does not exist, or may alredy have been deleted."
-                    })
-                }
+                db.get(request.params.id, function(err, value){
+                    if(err){
+                        reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                    } else {
+                        db.del(request.params.id, function(err){
+                            if(err){
+                                reply(hapi.error.internal("Failed to delete user."))
+                            } else {
+                                reply({
+                                    statusCode: 200,
+                                    message: "User deleted succesfully"
+                                })
+                            }
+                        })
+                    }
+                })
             },
             config: {
                 validate: {
@@ -117,5 +135,10 @@ exports.register = function(plugin, options, next) {
 };
 
 exports.register.attributes = {
-    pkg: require("./package.json")
+    pkg: {
+        "name": "users",
+        "version": "0.0.1",
+        "description": "example users feature for sample Hapi app",
+        "main": "index.js"
+    }
 };

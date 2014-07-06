@@ -1,4 +1,5 @@
 var Hapi = require('hapi');
+var db = require('level');
 
 var server = Hapi.createServer('localhost', 8080, {
     cors: true
@@ -6,7 +7,7 @@ var server = Hapi.createServer('localhost', 8080, {
 
 server.pack.register([
     {
-        plugin: require("./plugins/user")
+        plugin: require("hapi-level")
     },
     {
         plugin: require('hapi-swagger'),
@@ -15,11 +16,15 @@ server.pack.register([
             endpoint: '/docs',
             pathPrefixSize: 1
         }
+    },
+    {
+        plugin: require("./plugins/user")
     }
 ], function() {
     server.start(function () {
         console.log('Server started at: ' + server.info.uri);
     })
+
 })
 
 
