@@ -6,13 +6,15 @@ exports.register = function(plugin, options, next) {
     var hapi = plugin.hapi
     var db = plugin.plugins['hapi-level'].db
 
+    var Users = db.sublevel('users')
+
     plugin.route([
         {
             path: "/users",
             method: "GET",
             handler: function(request, reply) {
                 var users = []
-                db.createReadStream()
+                Users.createReadStream()
                     .on('data', function(data) {
                         if (typeof request.query.name === "undefined" || data.value.indexOf(request.query.name) >= 0) {
                             users.push({
@@ -43,7 +45,7 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "GET",
             handler: function(request, reply) {
-                db.get(request.params.id, function(err, value) {
+                Users.get(request.params.id, function(err, value) {
                     if(err){
                         reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
                     } else {
@@ -71,11 +73,11 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "POST",
             handler: function(request, reply) {
-                db.put(request.query.id, request.query.name, function(err) {
+                Users.put(request.query.id, request.query.name, function(err) {
                     if(err){
                         reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
                     } else {
-                        db.get(request.query.id, function(err, value) {
+                        Users.get(request.query.id, function(err, value) {
                             reply({
                                 statusCode: 200,
                                 data: {
@@ -102,7 +104,7 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "DELETE",
             handler: function(request, reply) {
-                db.get(request.params.id, function(err, value){
+                Users.get(request.params.id, function(err, value){
                     if(err){
                         reply(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
                     } else {
