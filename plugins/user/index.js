@@ -1,6 +1,5 @@
 var Joi = require('joi')
 var _ = require('lodash')
-var users = require('./users')
 
 exports.register = function(plugin, options, next) {
 
