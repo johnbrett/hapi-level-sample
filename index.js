@@ -7,7 +7,13 @@ var server = Hapi.createServer('localhost', 8080, {
 
 server.pack.register([
     {
-        plugin: require("hapi-level")
+        plugin: require("hapi-level"),
+        options: {
+            path: './db',
+            config: {
+                valueEncoding: 'json'
+            }
+        }
     },
     {
         plugin: require('hapi-swagger'),
