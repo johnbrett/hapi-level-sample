@@ -70,8 +70,7 @@ exports.register = function(plugin, options, next) {
                 validate: {
                     query: {
                         id: Joi.number().integer().required().description("User's ID"),
-                        name: Joi.string().required().description("User's name"),
-                        organisation: Joi.string().required().description("Organisation user belongs to")
+                        name: Joi.string().required().description("User's name")
                     }
                 },
                 tags: ['api'],
