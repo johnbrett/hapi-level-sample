@@ -1,8 +1,6 @@
 var Hapi = require('Hapi')
 
-module.exports = function(db) {
-
-    var users = db.sublevel(db)
+module.exports = function(users) {
 
     var User = {}
 

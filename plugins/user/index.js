@@ -5,8 +5,11 @@ exports.register = function(plugin, options, next) {
 
     var hapi = plugin.hapi
     var db = plugin.plugins['hapi-level'].db
+    var users = db.getSublevel('users')
 
-    var User = require('./User')(db)
+    var User = require('./User')(users)
+
+    plugin.expose({users: users})
 
     plugin.route([
         {
@@ -70,7 +73,8 @@ exports.register = function(plugin, options, next) {
                 validate: {
                     query: {
                         id: Joi.number().integer().required().description("User's ID"),
-                        name: Joi.string().required().description("User's name")
+                        name: Joi.string().required().description("User's name"),
+                        organisation: Joi.string().required().description("User's organisation")
                     }
                 },
                 tags: ['api'],
@@ -108,7 +112,7 @@ exports.register = function(plugin, options, next) {
 
 exports.register.attributes = {
     pkg: {
-        "name": "users",
+        "name": "user",
         "version": "0.0.1",
         "description": "example users feature for sample Hapi app",
         "main": "index.js"

@@ -20,17 +20,21 @@ server.pack.register([
         options: {
             basePath: 'http://localhost:8080',
             endpoint: '/docs',
-            pathPrefixSize: 1
+            pathPrefixSize: 1,
+            apiVersion: 1
         }
     },
     {
         plugin: require("./plugins/user")
+    },
+    {
+        plugin: require("./plugins/organisation")
     }
 ], function() {
     server.start(function () {
         console.log('Server started at: ' + server.info.uri);
     })
-
 })
+
 
 
