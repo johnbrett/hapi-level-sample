@@ -5,11 +5,12 @@
   "main": "index.js",
   "dependencies": {
     "hapi": "~6.0.2",
-    "hapi-swagger": "~0.2.0",
+    "hapi-swagger": "~0.2.x",
     "joi": "~4.6.1",
     "level": "~0.18.0",
     "lodash": "~2.4.1",
-    "hapi-level": "*"
+    "hapi-level": "*",
+    "hapi-auth-bearer-token": "0.0.3"
   },
   "devDependencies": {},
   "scripts": {
