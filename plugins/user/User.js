@@ -1,8 +1,12 @@
 var Hapi = require('Hapi')
 
-module.exports = function(users) {
+module.exports = function(db) {
 
     var User = {}
+
+    var users = db.getSublevel('users')
+
+    User.users = users
 
     User.find = function(filters, callback) {
 

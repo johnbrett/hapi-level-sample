@@ -5,11 +5,10 @@ exports.register = function(plugin, options, next) {
 
     var hapi = plugin.hapi
     var db = plugin.plugins['hapi-level'].db
-    var users = db.getSublevel('users')
 
-    var User = require('./User')(users)
+    var User = require('./User')(db)
 
-    plugin.expose({users: users})
+    plugin.expose({users: User.users})
 
     plugin.route([
         {
@@ -74,9 +73,11 @@ exports.register = function(plugin, options, next) {
                     query: {
                         id: Joi.number().integer().required().description("User's ID"),
                         name: Joi.string().required().description("User's name"),
-                        organisation: Joi.string().required().description("User's organisation")
+                        organisation: Joi.string().required().description("User's organisation"),
+                        access_token: Joi.string().required().description("User's login token")
                     }
                 },
+                auth: false,
                 tags: ['api'],
                 description: "Create a user"
             }
