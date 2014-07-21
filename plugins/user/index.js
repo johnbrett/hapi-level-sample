@@ -58,8 +58,7 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "POST",
             handler: function(request, reply) {
-                User.create(request.query.id, request.query, function(id){ 
-                    
+                User.create(request.payload.id, request.payload, function(id){ 
                     User.findById(id, function(user){
                         reply({
                             statusCode: 200,
@@ -70,7 +69,7 @@ exports.register = function(plugin, options, next) {
             },
             config: {
                 validate: {
-                    query: {
+                    payload: {
                         id: Joi.number().integer().required().description("User's ID"),
                         name: Joi.string().required().description("User's name"),
                         organisation: Joi.string().required().description("User's organisation"),

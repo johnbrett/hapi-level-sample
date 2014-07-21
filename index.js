@@ -17,7 +17,9 @@ server.pack.register([
         }
     ], function(err){
 
-    server.auth.strategy('default', 'bearer-access-token', 'required', {
+
+    var auth_scheme = process.env.AUTH || 'optional'
+    server.auth.strategy('default', 'bearer-access-token', auth_scheme, {
         validateFunc: function(token, callback) {
             var db = server.plugins['hapi-level'].db
             var users = db.sublevel('users')
@@ -43,7 +45,8 @@ server.pack.register([
                 endpoint: '/docs',
                 pathPrefixSize: 1,
                 apiVersion: 1,
-                auth: false
+                auth: false,
+                payloadType: 'form'
             }
         },
         {
