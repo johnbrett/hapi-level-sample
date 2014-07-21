@@ -13,9 +13,9 @@ module.exports = function(db) {
         var response = []
         users.createReadStream()
             .on('data', function(data) {
-                //if (typeof filters.name === "undefined" || data.value.indexOf(filters.name) >= 0) {
+                if (typeof filters.name === "undefined" || data.value.indexOf(filters.name) >= 0) {
                     response.push(data.value)
-                //}
+                }
             })
             .on('end', function(data) {
                 return callback(response)
