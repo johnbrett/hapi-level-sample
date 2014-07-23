@@ -3,6 +3,8 @@ Sample API Built With NodeJS, HapiJS, LevelDB, Swaggerui
 
 This is a sample API built with NodeJS, HapiJS, LevelDB, Swaggerui to demonstrate the ease and rapid prototyping abilities of HapiJS and LevelDB. It will also offer a boilerplate app for anyone looking to build an application with this technology stack.
 
+You check out a [demo of the Swaggerui generated API docs here](http://johnbrett.me:8080/documentation)
+
 All suggestions, recommendations are welcome. I'm still in the early stages of what I will cover this project, any questions on design choices, or preferences on what areas you would like the app to cover are welcomed, just open an issue.
 
 To build and run:
