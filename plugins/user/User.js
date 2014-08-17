@@ -1,4 +1,4 @@
-var Hapi = require('Hapi')
+var Hapi = require('hapi')
 
 module.exports = function(db) {
 
