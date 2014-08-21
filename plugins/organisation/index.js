@@ -2,40 +2,22 @@ var Joi = require('joi')
 
 exports.register = function (plugin, options, next) {
 
-    var users;
-
+    plugin.dependency('hapi-level')
     plugin.dependency('user')
 
-    var db = plugin.plugins['hapi-level'].db
-    var users = plugin.plugins['user'].users
-    var organisations = db.sublevel('organisations')
-
-    // users.pre(function(value, add){
-    //     console.log(value)
-    //     add({
-    //         key: value.organisation,
-    //         value: value.value,
-    //         type: 'put',
-    //         prefix: organisations
-    //     })
-    // })
+    var Organisation = require('./Organisation')(plugin)
 
     plugin.route([
         {
             path: "/organisations",
             method: "GET",
             handler: function(request, reply) {
-                var orgs = []
-                organisations.createReadStream()
-                    .on('data', function(data) {
-                        orgs.push(data.value)
+                Organisation.find(null, function(orgs){
+                    reply({
+                       statusCode: 200,
+                       data: orgs
                     })
-                    .on('end', function(data) {
-                        reply({
-                            statusCode: 200,
-                            data: orgs
-                        })
-                    })
+                })        
             },
             config: {
                 validate: {
@@ -52,22 +34,12 @@ exports.register = function (plugin, options, next) {
             path: "/organisations/{id}",
             method: "GET",
             handler: function(request, reply) {
-
-                organisations.get(request.params.id, function(err, organisation) {
-                    var org_users = []
-                    users.createReadStream()
-                        .on('data', function(data) {
-                            if (data.value.organisation === organisation.name) {
-                                org_users.push(data.value.name)
-                            }
-                        })
-                        .on('end', function(data) {
-                            reply({
-                                id: organisation.id,
-                                name: organisation.name,
-                                users: org_users
-                            })
-                        })
+                Organisation.findById(request.params.id, function(organisation, org_users) {
+                    reply({
+                        id: organisation.id,
+                        name: organisation.name,
+                        users: org_users
+                    })
                 })
             },
             config: {
@@ -87,14 +59,11 @@ exports.register = function (plugin, options, next) {
             path: "/organisations",
             method: "POST",
             handler: function(request, reply) {
-                organisations.put(request.payload.id, request.payload, function(err) {
-                    if(err){
-                        reply(Hapi.error.internal("There was a problem creating the user."))
-                    } else {
-                        organisations.get(request.payload.id, function(err, value) {
-                            reply(value)
-                        })
-                    }
+                Organisation.create(request.payload.id, request.payload, function(organisation) {
+                    reply({
+                       statusCode: 200,
+                       data: organisation
+                    })
                 })
             },
             config: {

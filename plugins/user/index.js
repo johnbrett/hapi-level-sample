@@ -3,10 +3,9 @@ var _ = require('lodash')
 
 exports.register = function(plugin, options, next) {
 
-    var hapi = plugin.hapi
-    var db = plugin.plugins['hapi-level'].db
+    plugin.dependency('hapi-level')
 
-    var User = require('./User')(db)
+    var User = require('./User')(plugin)
 
     plugin.expose({users: User.users})
 

@@ -1,9 +1,9 @@
-var Hapi = require('hapi')
-
-module.exports = function(db) {
+module.exports = function(plugin) {
 
     var User = {}
 
+    var hapi = plugin.hapi
+    var db = plugin.plugins['hapi-level'].db
     var users = db.sublevel('users')
 
     User.users = users
@@ -25,7 +25,7 @@ module.exports = function(db) {
     User.findById = function(user_id, callback) {
         users.get(user_id, function(err, value) {
             if(err){
-                return callback(Hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                return callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
             } else {
                 return callback(value);
             }
@@ -35,7 +35,7 @@ module.exports = function(db) {
     User.create = function(id, user, callback) {
        users.put(id, user, function(err) {
             if(err){
-                return callback(Hapi.error.internal("There was a problem creating the user."))
+                return callback(hapi.error.internal("There was a problem creating the user."))
             } else {
                 return callback(id)
             }
@@ -45,11 +45,11 @@ module.exports = function(db) {
     User.delete = function(id, callback) {
         users.get(id, function(err, value){
             if(err){
-                callback(Hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
             } else {
                 users.del(id, function(err){
                     if(err) {
-                        return callback(Hapi.error.internal("There was an error deleting the user."))
+                        return callback(hapi.error.internal("There was an error deleting the user."))
                     } else {
                         return callback(true)
                     }
