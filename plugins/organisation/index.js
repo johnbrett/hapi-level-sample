@@ -1,4 +1,5 @@
 var Joi = require('joi')
+var Calibrate = require('calibrate')
 
 exports.register = function (plugin, options, next) {
 
@@ -12,11 +13,8 @@ exports.register = function (plugin, options, next) {
             path: "/organisations",
             method: "GET",
             handler: function(request, reply) {
-                Organisation.find(null, function(orgs){
-                    reply({
-                       statusCode: 200,
-                       data: orgs
-                    })
+                Organisation.find(null, function(err, orgs){
+                    reply(Calibrate(err, orgs, null))
                 })        
             },
             config: {
@@ -34,12 +32,8 @@ exports.register = function (plugin, options, next) {
             path: "/organisations/{id}",
             method: "GET",
             handler: function(request, reply) {
-                Organisation.findById(request.params.id, function(organisation, org_users) {
-                    reply({
-                        id: organisation.id,
-                        name: organisation.name,
-                        users: org_users
-                    })
+                Organisation.findById(request.params.id, function(err, organisation) {
+                    reply(Calibrate(err, organisation))
                 })
             },
             config: {
@@ -59,11 +53,8 @@ exports.register = function (plugin, options, next) {
             path: "/organisations",
             method: "POST",
             handler: function(request, reply) {
-                Organisation.create(request.payload.id, request.payload, function(organisation) {
-                    reply({
-                       statusCode: 200,
-                       data: organisation
-                    })
+                Organisation.create(request.payload.id, request.payload, function(err, organisation) {
+                    reply(Calibrate(err, organisation, null))
                 })
             },
             config: {

@@ -13,21 +13,24 @@ module.exports = function(plugin) {
         var response = []
         users.createReadStream()
             .on('data', function(data) {
-                if (typeof filters.name === "undefined" || data.value.indexOf(filters.name) >= 0) {
+                if (typeof filters.name === "undefined" || data.value.name.indexOf(filters.name) >= 0) {
                     response.push(data.value)
                 }
             })
+            .on('error', function(err) {
+                return callback(err, null)
+            })
             .on('end', function(data) {
-                return callback(response)
+                return callback(null, response)
             })
     }
 
     User.findById = function(user_id, callback) {
         users.get(user_id, function(err, value) {
             if(err){
-                return callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                return callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."), null)
             } else {
-                return callback(value);
+                return callback(null, value);
             }
         })
     }
@@ -35,9 +38,9 @@ module.exports = function(plugin) {
     User.create = function(id, user, callback) {
        users.put(id, user, function(err) {
             if(err){
-                return callback(hapi.error.internal("There was a problem creating the user."))
+                return callback(hapi.error.internal("There was a problem creating the user."), null)
             } else {
-                return callback(id)
+                return callback(null, id)
             }
         })
     }
@@ -45,13 +48,13 @@ module.exports = function(plugin) {
     User.delete = function(id, callback) {
         users.get(id, function(err, value){
             if(err){
-                callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."))
+                callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."), null)
             } else {
                 users.del(id, function(err){
                     if(err) {
-                        return callback(hapi.error.internal("There was an error deleting the user."))
+                        return callback(hapi.error.internal("There was an error deleting the user."), null)
                     } else {
-                        return callback(true)
+                        return callback(null, "User deleted successfully")
                     }
                 })
             }

@@ -1,5 +1,6 @@
 var Joi = require('joi')
 var _ = require('lodash')
+var Calibrate = require('calibrate')
 
 exports.register = function(plugin, options, next) {
 
@@ -14,11 +15,8 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "GET",
             handler: function(request, reply) {
-                User.find(request.query, function(users){
-                    reply({
-                        statusCode: 200,
-                        data: users
-                    })
+                User.find(request.query, function(err, users){
+                    reply(Calibrate(err, users, null))
                 })
             },
             config: {
@@ -36,11 +34,8 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "GET",
             handler: function(request, reply) {
-                User.findById(request.params.id, function(user){
-                    reply({
-                        statusCode: 200,
-                        data: user
-                    })
+                User.findById(request.params.id, function(err, user){
+                    reply(Calibrate(err, user, null))
                 })
             },
             config: {
@@ -57,12 +52,9 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "POST",
             handler: function(request, reply) {
-                User.create(request.payload.id, request.payload, function(id){ 
-                    User.findById(id, function(user){
-                        reply({
-                            statusCode: 200,
-                            data: user
-                        })
+                User.create(request.payload.id, request.payload, function(err, id){ 
+                    User.findById(id, function(err, user){
+                        reply(Calibrate(err, user, null))
                     })
                 })
             },
@@ -84,15 +76,8 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "DELETE",
             handler: function(request, reply) {
-                User.delete(request.params.id, function(result){
-                    if(result === true){
-                        reply({
-                            statusCode: 200,
-                            message: "User deleted succesfully"
-                        })
-                    } else {
-                        reply(result)
-                    }
+                User.delete(request.params.id, function(err, result){
+                    reply(Calibrate(err, "User deleted succesfully", null))
                 })
             },
             config: {
