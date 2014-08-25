@@ -1,11 +1,11 @@
 Sample API Built With NodeJS, HapiJS, LevelDB, Swaggerui
 =================
 
-This is a sample API built with NodeJS, HapiJS, LevelDB, Swaggerui to demonstrate the ease and rapid prototyping abilities of HapiJS and LevelDB. It will also offer a boilerplate app for anyone looking to build an application with this technology stack.
+This is a sample API built with NodeJS, HapiJS, LevelDB, Swaggerui to demonstrate the ease and rapid prototyping abilities of HapiJS and LevelDB. It will also offer a boilerplate app for anyone looking to build an application with this technology stack. Data will be persisted in LevelDB between each run of the server.
 
 You check out a [demo of the Swaggerui generated API docs here](http://johnbrett.me:8080/documentation)
 
-All suggestions, recommendations are welcome. I'm still in the early stages of what I will cover this project, any questions on design choices, or preferences on what areas you would like the app to cover are welcomed, just open an issue.
+All suggestions, recommendations are welcome. Still in the early stages of what this project will cover, any questions on design choices, or preferences on what areas you would like the app to cover are welcomed, just open an issue.
 
 To build and run:
 
@@ -22,10 +22,11 @@ If you want to sample authentication for the api, run with:
         
 Authentication is disabled for the create user route, so you can create a user with an access token of your choosing to specify when querying the other routes.
 
-Data will be persisted in LevelDB between each run of the server.
 
 Node Modules created in the making of this project
 
  - [hapi-level](https://github.com/johnbrett/hapi-level) : Utility module to ease integration of Hapi and LevelDB
 
  - [hapi-auth-bearer-token](https://github.com/johnbrett/hapi-auth-bearer-token) : Authorization module for HapiJS based on the Bearer authentication scheme.
+
+ - [calibrate](https://github.com/johnbrett/calibrate) : DRY to create consistent responses, with error handling
