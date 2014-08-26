@@ -10,7 +10,8 @@
     "lodash": "~2.4.1",
     "hapi-level": "*",
     "hapi-auth-bearer-token": "1.1.4",
-    "handlebars": "~2.0.0-alpha.4"
+    "handlebars": "~2.0.0-alpha.4",
+    "calibrate": "*"
   },
   "devDependencies": {},
   "scripts": {
