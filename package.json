@@ -4,13 +4,13 @@
   "description": "Project to demonstrate the rapid prototyping abilities of HapiJS and LevelDB",
   "main": "index.js",
   "dependencies": {
-    "hapi": "~6.5.1",
+    "hapi": "~6.7.1",
     "hapi-swagger": "~0.2.x",
     "joi": "~4.6.2",
     "lodash": "~2.4.1",
     "hapi-level": "*",
-    "hapi-auth-bearer-token": "1.1.4",
-    "handlebars": "~2.0.0-alpha.4",
+    "hapi-auth-bearer-token": "2.0.0",
+    "handlebars": "~2.0.0.",
     "calibrate": "*"
   },
   "devDependencies": {},
