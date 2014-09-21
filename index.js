@@ -24,7 +24,8 @@ server.pack.register([
             pathPrefixSize: 1,
             apiVersion: 1,
             auth: false,
-            payloadType: 'form'
+            payloadType: 'form',
+            enableDocumentationPage: false
         }
     },
     {

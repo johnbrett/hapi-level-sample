@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "hapi": "~6.8.1",
-    "hapi-swagger": "~0.2.x",
+    "hapi-swagger": "~0.3.x",
     "joi": "~4.7.0",
     "lodash": "~2.4.1",
     "hapi-level": "*",
