@@ -4,7 +4,7 @@
   "description": "Project to demonstrate the rapid prototyping abilities of HapiJS and LevelDB",
   "main": "index.js",
   "dependencies": {
-    "hapi": "~6.11.0",
+    "hapi": "~6.11.1",
     "hapi-swagger": "~0.3.x",
     "joi": "~4.7.0",
     "lodash": "~2.4.1",
