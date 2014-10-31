@@ -1,12 +1,8 @@
-module.exports = function(plugin) {
+module.exports = function(users) {
 
     var User = {}
 
-    var hapi = plugin.hapi
-    var db = plugin.plugins['hapi-level'].db
-    var users = db.sublevel('users')
-
-    User.users = users
+    User.users = users;
 
     User.find = function(filters, callback) {
 
@@ -27,18 +23,14 @@ module.exports = function(plugin) {
 
     User.findById = function(user_id, callback) {
         users.get(user_id, function(err, value) {
-            if(err){
-                return callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."), null)
-            } else {
-                return callback(null, value);
-            }
+            return callback(err.message, value);
         })
     }
 
     User.create = function(id, user, callback) {
        users.put(id, user, function(err) {
             if(err){
-                return callback(hapi.error.internal("There was a problem creating the user."), null)
+                return callback("There was a problem creating the user.", null)
             } else {
                 return callback(null, id)
             }
@@ -48,11 +40,11 @@ module.exports = function(plugin) {
     User.delete = function(id, callback) {
         users.get(id, function(err, value){
             if(err){
-                callback(hapi.error.notFound("The user with that ID does not exist, or may alredy have been deleted."), null)
+                return callback(err.message, null)
             } else {
                 users.del(id, function(err){
                     if(err) {
-                        return callback(hapi.error.internal("There was an error deleting the user."), null)
+                        return callback(err.message, null)
                     } else {
                         return callback(null, "User deleted successfully")
                     }

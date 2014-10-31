@@ -3,10 +3,12 @@ var Calibrate = require('calibrate')
 
 exports.register = function (plugin, options, next) {
 
-    plugin.dependency('hapi-level')
-    plugin.dependency('user')
+    var user = plugin.plugins['user']
+    var db = plugin.plugins['hapi-level'].db.sublevel('organisations')
 
-    var Organisation = require('./Organisation')(plugin)
+    var Organisation = require('./Organisation')(db, user)
+
+    plugin.expose(Organisation);
 
     plugin.route([
         {

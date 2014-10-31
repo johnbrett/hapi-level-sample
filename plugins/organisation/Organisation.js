@@ -1,12 +1,9 @@
-module.exports = function(plugin) {
+module.exports = function(organisations, user) {
 
     var Organisation = {}
-    
-    var hapi = plugin.hapi
-    var db = plugin.plugins['hapi-level'].db
-    var users = plugin.plugins['user'].users
-    var organisations = db.sublevel('organisations')
 
+    var users = user.users
+    
     Organisation.find = function(filters, callback) {
         var orgs = []
         organisations.createReadStream()
@@ -14,7 +11,7 @@ module.exports = function(plugin) {
                 orgs.push(data.value)
             })
             .on('error', function(err) {
-                callback(err, null)
+                callback(err.message, null)
             })
             .on('end', function(data) {
                 callback(null, orgs)
@@ -25,7 +22,7 @@ module.exports = function(plugin) {
         var org_users = []
         organisations.get(id, function(err, organisation) {
             if(err) {
-                callback(hapi.error.notFound('Organisation resource does not exist'), null)
+                callback(null, null)
             } else {
                 users.createReadStream()
                     .on('data', function(data) {
@@ -40,7 +37,7 @@ module.exports = function(plugin) {
                         callback(null, {
                             id: organisation.id,
                             name: organisation.name,
-                            user: org_users
+                            users: org_users
                         })
                     })
             }
@@ -50,9 +47,9 @@ module.exports = function(plugin) {
     Organisation.create = function(organisation_id, organisation, callback) {
         organisations.put(organisation_id, organisation, function(err) {
             if(err){
-                callback(hapi.error.internal("There was a problem creating the user."), null)
+                callback("There was a problem creating the organisation", null)
             } else {
-                Organisation.findById(organisation_id, function(data) {
+                Organisation.findById(organisation_id, function(err, data) {
                   callback(null, data)
                 })
             }

@@ -11,7 +11,7 @@
     "hapi-level": "*",
     "hapi-auth-bearer-token": "~2.2.3",
     "handlebars": "~2.0.0",
-    "calibrate": "*"
+    "calibrate": "~0.0.x"
   },
   "devDependencies": {},
   "scripts": {

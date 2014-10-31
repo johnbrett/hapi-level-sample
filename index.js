@@ -41,6 +41,6 @@ server.pack.register([
     { plugin: require("./plugins/organisation") }
 ], function() {
     server.start(function () {
-        console.log('Server started at: ' + server.info.uri);
+        console.log('Server started at: ' + server.info.uri + ' with [' + Object.keys(server.plugins).join(', ') + '] enabled')
     })
 })

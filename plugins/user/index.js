@@ -4,11 +4,11 @@ var Calibrate = require('calibrate')
 
 exports.register = function(plugin, options, next) {
 
-    plugin.dependency('hapi-level')
+    var db = plugin.plugins['hapi-level'].db.sublevel('users');
 
-    var User = require('./User')(plugin)
+    var User = require('./User')(db)
 
-    plugin.expose({users: User.users})
+    plugin.expose(User)
 
     plugin.route([
         {
@@ -35,7 +35,11 @@ exports.register = function(plugin, options, next) {
             method: "GET",
             handler: function(request, reply) {
                 User.findById(request.params.id, function(err, user){
-                    reply(Calibrate(err, user, null))
+                    if(err) {
+                        reply(Calibrate(null, null))
+                    } else {
+                        reply(Calibrate(null, user, null))
+                    }
                 })
             },
             config: {
@@ -52,10 +56,14 @@ exports.register = function(plugin, options, next) {
             path: "/users",
             method: "POST",
             handler: function(request, reply) {
-                User.create(request.payload.id, request.payload, function(err, id){ 
-                    User.findById(id, function(err, user){
-                        reply(Calibrate(err, user, null))
-                    })
+                User.create(request.payload.id, request.payload, function(err, id){
+                    if(err) {
+                        reply(Calibrate(err, id));
+                    } else {
+                        User.findById(id, function(err, user){
+                            reply(Calibrate(err, user, null))
+                        })
+                    }
                 })
             },
             config: {
@@ -77,7 +85,11 @@ exports.register = function(plugin, options, next) {
             method: "DELETE",
             handler: function(request, reply) {
                 User.delete(request.params.id, function(err, result){
-                    reply(Calibrate(err, "User deleted succesfully", null))
+                    if(err) {
+                        reply(Calibrate(null, null))
+                    } else {
+                        reply(Calibrate(err, "User deleted succesfully", null))
+                    }
                 })
             },
             config: {
