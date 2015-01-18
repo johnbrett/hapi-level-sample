@@ -1,14 +1,13 @@
 var Hapi = require('hapi');
+var server = new Hapi.Server();
 
-var server = Hapi.createServer('localhost', process.env.PORT || 8080, {
-    cors: true
-});
+server.connection({ host: 'localhost', port: 3000, router: { stripTrailingSlash: true }});
 
-server.pack.register([
-    { plugin: require('hapi-auth-bearer-token') },
-    { plugin: require('./plugins/authentication') },
+server.register([
+    { register: require('hapi-auth-bearer-token') },
+    { register: require('./plugins/authentication') },
     {
-        plugin: require("hapi-level"),
+        register: require("hapi-level"),
         options: {
             path: './db',
             config: {
@@ -17,7 +16,7 @@ server.pack.register([
         }
     },
     {
-        plugin: require('hapi-swagger'),
+        register: require('hapi-swagger'),
         options: {
             basePath: server.info.uri,
             endpoint: '/docs',
@@ -29,7 +28,7 @@ server.pack.register([
         }
     },
     {
-        plugin: require("./plugins/documentation"),
+        register: require("./plugins/documentation"),
         options: {
             basePath: server.info.uri,
             endpoint: '/docs',
@@ -37,8 +36,8 @@ server.pack.register([
             alias: '/documentation'
         }
     },
-    { plugin: require("./plugins/user") },
-    { plugin: require("./plugins/organisation") }
+    { register: require("./plugins/user") },
+    { register: require("./plugins/organisation") }
 ], function() {
     server.start(function () {
         console.log('Server started at: ' + server.info.uri + ' with [' + Object.keys(server.plugins).join(', ') + '] enabled')

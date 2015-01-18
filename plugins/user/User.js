@@ -21,10 +21,10 @@ module.exports = function(users) {
             })
     }
 
-    User.findById = function(user_id, callback) {
+    User.findById = function(user_id) {
         users.get(user_id, function(err, value) {
-            return callback(err.message, value);
-        })
+           return callback(err.message, value);
+       })
     }
 
     User.create = function(id, user, callback) {

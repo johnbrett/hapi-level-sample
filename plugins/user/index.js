@@ -34,13 +34,13 @@ exports.register = function(plugin, options, next) {
             path: "/users/{id}",
             method: "GET",
             handler: function(request, reply) {
-                User.findById(request.params.id, function(err, user){
-                    if(err) {
-                        reply(Calibrate(null, null))
-                    } else {
-                        reply(Calibrate(null, user, null))
-                    }
-                })
+               User.findById(request.params.id, function(err, user){
+                   if(err) {
+                       reply(Calibrate(null, null))
+                   } else {
+                       reply(Calibrate(null, user, null))
+                   }
+               })
             },
             config: {
                 validate: {
