@@ -1,6 +1,6 @@
 exports.register = function(plugin, options, next) {
 
-    plugin.path(__dirname);
+    plugin.path(__dirname)
 
     plugin.dependency('hapi-swagger', function(plugin, next){
 
@@ -29,10 +29,10 @@ exports.register = function(plugin, options, next) {
             }
         ])
 
-        next();
+        next()
     })
 
-    next();
+    next()
 }
 
 exports.register.attributes = {

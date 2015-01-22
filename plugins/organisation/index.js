@@ -8,7 +8,7 @@ exports.register = function (plugin, options, next) {
 
     var Organisation = require('./Organisation')(db, user)
 
-    plugin.expose(Organisation);
+    plugin.expose(Organisation)
 
     plugin.route([
         {
@@ -73,8 +73,8 @@ exports.register = function (plugin, options, next) {
         }
     ])
 
-    next();
-};
+    next()
+}
 
 exports.register.attributes = {
     pkg: {
@@ -83,4 +83,4 @@ exports.register.attributes = {
         "description": "example organisation feature for sample Hapi app",
         "main": "index.js"
     }
-};
+}
