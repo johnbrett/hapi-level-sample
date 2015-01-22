@@ -2,25 +2,28 @@ exports.register = function(plugin, options, next) {
 
     var auth_scheme = process.env.AUTH || 'optional'
     
-    plugin.auth.strategy('default', 'bearer-access-token', auth_scheme, {
-        validateFunc: function(token, callback) {
-            var db = server.plugins['hapi-level'].db
-            var users = db.sublevel('users')
+    plugin.register({ register: require('hapi-auth-bearer-token') }, function(err) {
 
-            var response = []
-            users.createReadStream()
-                .on('data', function(data) {
-                    if(data.value.access_token === token) {
-                        callback(null, true, { token: token, user: data.value })
-                    }
-                })
-                .on('end', function(data) {
-                    callback(null, false, null)
-                })
-        }
+        plugin.auth.strategy('default', 'bearer-access-token', auth_scheme, {
+            validateFunc: function(token, callback) {
+                var db = server.plugins['hapi-level'].db
+                var users = db.sublevel('users')
+
+                var response = []
+                users.createReadStream()
+                    .on('data', function(data) {
+                        if(data.value.access_token === token) {
+                            callback(null, true, { token: token, user: data.value })
+                        }
+                    })
+                    .on('end', function(data) {
+                        callback(null, false, null)
+                    })
+            }
+        })
+
+        next()
     })
-
-    next();
 }
 
 exports.register.attributes = {

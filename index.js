@@ -1,10 +1,9 @@
-var Hapi = require('hapi');
-var server = new Hapi.Server();
+var Hapi = require('hapi')
+var server = new Hapi.Server()
 
-server.connection({ host: 'localhost', port: 3000, router: { stripTrailingSlash: true }});
+server.connection({ host: 'localhost', port: 3000, router: { stripTrailingSlash: true }})
 
 server.register([
-    { register: require('hapi-auth-bearer-token') },
     { register: require('./plugins/authentication') },
     {
         register: require("hapi-level"),
