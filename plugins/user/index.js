@@ -4,7 +4,7 @@ var Calibrate = require('calibrate')
 
 exports.register = function(plugin, options, next) {
 
-    var db = plugin.plugins['hapi-level'].db.sublevel('users');
+    var db = plugin.plugins['hapi-level'].db.sublevel('users')
 
     var User = require('./User')(db)
 
@@ -16,7 +16,11 @@ exports.register = function(plugin, options, next) {
             method: "GET",
             handler: function(request, reply) {
                 User.find(request.query, function(err, users){
-                    reply(Calibrate(err, users, null))
+                  if(err) {
+                    return Calibrate.error(err)
+                  }
+
+                  return reply(Calibrate.response(users, undefined))
                 })
             },
             config: {
@@ -35,11 +39,11 @@ exports.register = function(plugin, options, next) {
             method: "GET",
             handler: function(request, reply) {
                User.findById(request.params.id, function(err, user){
-                   if(err) {
-                       reply(Calibrate(null, null))
-                   } else {
-                       reply(Calibrate(null, user, null))
-                   }
+                 if(err) {
+                   return reply(Calibrate.response(undefined))
+                 }
+
+                 return reply(Calibrate.response(user, undefined))
                })
             },
             config: {
@@ -58,12 +62,16 @@ exports.register = function(plugin, options, next) {
             handler: function(request, reply) {
                 User.create(request.payload.id, request.payload, function(err, id){
                     if(err) {
-                        reply(Calibrate(err, id));
-                    } else {
-                        User.findById(id, function(err, user){
-                            reply(Calibrate(err, user, null))
-                        })
+                      return reply(Calibrate.response(undefined))
                     }
+
+                    User.findById(id, function(err, user){
+                        if(err) {
+                          return reply(Calibrate.response(undefined))
+                        }
+
+                        return reply(Calibrate.response(user, undefined))
+                    })
                 })
             },
             config: {
@@ -86,10 +94,11 @@ exports.register = function(plugin, options, next) {
             handler: function(request, reply) {
                 User.delete(request.params.id, function(err, result){
                     if(err) {
-                        reply(Calibrate(null, null))
-                    } else {
-                        reply(Calibrate(err, "User deleted succesfully", null))
+                      return reply(Calibrate.response(undefined))
                     }
+
+                    return reply(Calibrate.response("User deleted succesfully", undefined))
+
                 })
             },
             config: {
@@ -102,9 +111,10 @@ exports.register = function(plugin, options, next) {
                 description: "Delete a user"
             }
         }
-    ]);
-    next();
-};
+    ])
+
+    next()
+}
 
 exports.register.attributes = {
     pkg: {
@@ -113,4 +123,4 @@ exports.register.attributes = {
         "description": "example users feature for sample Hapi app",
         "main": "index.js"
     }
-};
+}

@@ -16,8 +16,12 @@ exports.register = function (plugin, options, next) {
             method: "GET",
             handler: function(request, reply) {
                 Organisation.find(null, function(err, orgs){
-                    reply(Calibrate(err, orgs, null))
-                })        
+                    if(err) {
+                      return reply(Calibrate.response(undefined))
+                    }
+
+                    return reply(Calibrate(orgs, undefined))
+                })
             },
             config: {
                 validate: {
@@ -35,13 +39,17 @@ exports.register = function (plugin, options, next) {
             method: "GET",
             handler: function(request, reply) {
                 Organisation.findById(request.params.id, function(err, organisation) {
-                    reply(Calibrate(err, organisation))
+                  if(err) {
+                    return reply(Calibrate.response(undefined))
+                  }
+
+                  return reply(Calibrate.response(organisation))
                 })
             },
             config: {
                 validate: {
                     params: {
-                        id: Joi.number()
+                        id: Joi.number().required()
                     },
                     query: {
                         name: Joi.string().description("Filter by user's name")
@@ -56,7 +64,11 @@ exports.register = function (plugin, options, next) {
             method: "POST",
             handler: function(request, reply) {
                 Organisation.create(request.payload.id, request.payload, function(err, organisation) {
-                    reply(Calibrate(err, organisation, null))
+                    if(err) {
+                      return Calibrate.response(null)
+                    }
+
+                    return reply(Calibrate.response(organisation, undefined))
                 })
             },
             config: {

@@ -2,7 +2,7 @@ module.exports = function(users) {
 
     var User = {}
 
-    User.users = users;
+    User.users = users
 
     User.find = function(filters, callback) {
 
@@ -21,18 +21,18 @@ module.exports = function(users) {
             })
     }
 
-    User.findById = function(user_id) {
+    User.findById = function(user_id, callback) {
         users.get(user_id, function(err, value) {
-           return callback(err.message, value);
-       })
+           return callback(err, value)
+        })
     }
 
     User.create = function(id, user, callback) {
        users.put(id, user, function(err) {
             if(err){
-                return callback("There was a problem creating the user.", null)
+                return callback("There was a problem creating the user.", undefined)
             } else {
-                return callback(null, id)
+                return callback(undefined, id)
             }
         })
     }
@@ -40,13 +40,13 @@ module.exports = function(users) {
     User.delete = function(id, callback) {
         users.get(id, function(err, value){
             if(err){
-                return callback(err.message, null)
+                return callback(err)
             } else {
                 users.del(id, function(err){
                     if(err) {
-                        return callback(err.message, null)
+                        return callback(err, undefined)
                     } else {
-                        return callback(null, "User deleted successfully")
+                        return callback(undefined, "User deleted successfully")
                     }
                 })
             }
