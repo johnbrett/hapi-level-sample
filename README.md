@@ -5,7 +5,7 @@ This is a sample API built with NodeJS, HapiJS, LevelDB, Swaggerui to demonstrat
 
 **This is an open sample, if you would like to see this project cover a specific area e.g. views, caching, different auth schemes, open an issue and I will try cover it. I aim to practice [OPEN open source](http://blog.technokrat.nl/2014/09/15/open-open-source/) on this project, meaning individuals making significant or valuable contributions will be given commit access.**
 
-Feel free to raise an issue or contact me on twitter if you have any questions [@\_johnbrett](https://www.twitter.com/_johnbrett). Beginners, feature requests and bug reports are welcomed.
+Feel free to raise an issue or contact me on twitter if you have any questions [@johnbrett_](https://www.twitter.com/johnbrett_). Beginners, feature requests and bug reports are welcomed.
 
 *Please star if you using this module so I know where to focus my time spent on open source work.*
 
