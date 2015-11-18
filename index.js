@@ -1,10 +1,17 @@
-var Hapi = require('hapi')
-var server = new Hapi.Server()
+const Hapi = require('hapi')
+const Vision = require('vision')
+const Blipp = require('blipp')
+const Inert = require('inert')
 
-server.connection({ host: 'localhost', port: 3000, router: { stripTrailingSlash: true }})
+const server = new Hapi.Server()
+
+server.connection({ port: 3000, router: { stripTrailingSlash: true } })
 
 server.register([
-    { register: require('./plugins/authentication') },
+    Vision,
+    Inert,
+    Blipp,
+    //{ register: require('./plugins/authentication') },
     {
         register: require("hapi-level"),
         options: {
@@ -17,15 +24,11 @@ server.register([
     {
         register: require('hapi-swagger'),
         options: {
-            basePath: server.info.uri,
-            endpoint: '/docs',
             pathPrefixSize: 1,
-            apiVersion: 1,
-            auth: false,
             payloadType: 'form',
-            enableDocumentationPage: false
+            enableDocumentationPage: true
         }
-    },
+    }/*,
     {
         register: require("./plugins/documentation"),
         options: {
@@ -34,11 +37,16 @@ server.register([
             auth: false,
             alias: '/documentation'
         }
-    },
+    }*/,
     { register: require("./plugins/user") },
     { register: require("./plugins/organisation") }
-], function() {
-    server.start(function () {
-        console.log('Server started at: ' + server.info.uri + ' with [' + Object.keys(server.plugins).join(', ') + '] enabled')
+], (err) => {
+
+    if(err) { throw err; }
+
+    server.start((err) => {
+
+        if(err) { throw err; }
+        console.log(`Server started at: ${server.info.uri} with [${Object.keys(server.plugins).join(', ')}] enabled`)
     })
 })
